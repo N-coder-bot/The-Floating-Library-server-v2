@@ -14,7 +14,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 const corsOptions = {
-  origin: "https://the-floating-library-v1.vercel.app",
+  origin: "https://the-floating-library-v1-71rvep8pg-n-coder-bot.vercel.app",
   credentials: true,
 };
 app.use(cors(corsOptions));
