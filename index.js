@@ -31,7 +31,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 const corsOptions = {
-  origin: "https://the-floating-library-v2-m22b.vercel.app/",
+  origin: "https://the-floating-library-v2-m22b.vercel.app",
 
   credentials: true,
 };
