@@ -107,6 +107,7 @@ const getBooks = async (req, res) => {
 // Follow or unfollow a person.
 const follow = async (req, res) => {
   const personToBeFollowed = req.body.id;
+  // console.log(personToBeFollowed);
   const currentUser = req.user;
 
   // Check if the current user is already following the person
@@ -126,7 +127,9 @@ const follow = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ success: true, msg: "Unfollowed successfully" });
+    res
+      .status(201)
+      .json({ success: true, msg: "Unfollowed successfully", follow: false });
   } else {
     // If not following, follow the person
     await User.findByIdAndUpdate(
@@ -141,7 +144,9 @@ const follow = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json({ success: true, msg: "Followed successfully" });
+    res
+      .status(201)
+      .json({ success: true, msg: "Followed successfully", follow: true });
   }
 };
 
@@ -164,6 +169,23 @@ const getFollowingPosts = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch following posts" });
   }
 };
+// get all users based on max number of followers.
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      $and: [
+        { _id: { $ne: req.user._id } },
+        { _id: { $nin: req.user.following } },
+      ],
+    }) // excluding current User.
+      .populate("followers")
+      .sort({ followers: -1 })
+      .exec();
+    res.status(200).json({ users: users });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
 module.exports = {
   userLogin,
   userSignup,
@@ -172,4 +194,5 @@ module.exports = {
   getBooks,
   follow,
   getFollowingPosts,
+  getAllUsers,
 };

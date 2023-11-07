@@ -9,6 +9,7 @@ const {
   getBooks,
   getFollowingPosts,
   follow,
+  getAllUsers,
 } = require("../controllers/userController");
 const {
   createPost,
@@ -51,4 +52,6 @@ router.get("/user/like/:postId", auth, likePost);
 router.post("/user/comment/:postId", auth, postComment);
 // get all the posts in the database but according to timestamp.
 router.get("/user/getAllPosts", auth, getAllPosts);
+// get all users in the database according to the max followers.
+router.get("/getAllUsers", auth, getAllUsers);
 module.exports = router;

@@ -7,13 +7,6 @@ const passport = require("passport");
 const cors = require("cors");
 require("dotenv").config();
 
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "https://the-floating-library-v2-m22b.vercel.app/",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
 var cloudinary = require("cloudinary").v2;
 cloudinary.config({
   cloud_name: `${process.env.cloud_name}`,
@@ -31,8 +24,10 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 const corsOptions = {
-  origin: "https://the-floating-library-v2-m22b.vercel.app",
-
+  origin: [
+    "https://the-floating-library-v2-m22b.vercel.app",
+    "http://localhost:5173",
+  ],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -44,7 +39,7 @@ require("./config/passport")(passport);
 const homeRouter = require("./routes/home");
 const usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
-io.on("connection", (socket) => {});
+// io.on("connection", (socket) => {});
 app.get("/signup", (req, res) => {
   res.render("addUser");
 });
