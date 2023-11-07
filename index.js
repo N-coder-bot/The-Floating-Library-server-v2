@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://the-floating-library-v2-m22b.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
   },
