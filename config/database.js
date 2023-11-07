@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const uri = process.env.uri;
-mongoose.connect(uri);
+try {
+  mongoose.connect(uri);
+} catch (error) {
+  console.log(error);
+}
 const connection = mongoose.connection;
 
 connection
