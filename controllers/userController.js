@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Post = require("../models/Post");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 //user login controller.
@@ -102,4 +103,73 @@ const getBooks = async (req, res) => {
   // console.log(user.books);
   res.json(user.books);
 };
-module.exports = { userLogin, userSignup, getUser, updateUser, getBooks };
+
+// Follow or unfollow a person.
+const follow = async (req, res) => {
+  const personToBeFollowed = req.body.id;
+  const currentUser = req.user;
+
+  // Check if the current user is already following the person
+  const isFollowing = currentUser.following.includes(personToBeFollowed);
+
+  if (isFollowing) {
+    // If already following, unfollow the person
+    await User.findByIdAndUpdate(
+      currentUser._id,
+      { $pull: { following: personToBeFollowed } },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      personToBeFollowed,
+      { $pull: { followers: currentUser._id } },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, msg: "Unfollowed successfully" });
+  } else {
+    // If not following, follow the person
+    await User.findByIdAndUpdate(
+      currentUser._id,
+      { $push: { following: personToBeFollowed } },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      personToBeFollowed,
+      { $push: { followers: currentUser._id } },
+      { new: true }
+    );
+
+    res.status(201).json({ success: true, msg: "Followed successfully" });
+  }
+};
+
+// get posts of the person you are following.
+const getFollowingPosts = async (req, res) => {
+  try {
+    const currentUser = req.user;
+    const followingIds = currentUser.following;
+    const { limit, skip } = req.query;
+    const followingPosts = await Post.find({ user: { $in: followingIds } })
+      .sort({ timestamp: -1 })
+      .skip(parseInt(skip))
+      .limit(parseInt(limit))
+      .populate("user", "username profilePicture")
+      .exec();
+
+    res.status(200).json({ success: true, posts: followingPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch following posts" });
+  }
+};
+module.exports = {
+  userLogin,
+  userSignup,
+  getUser,
+  updateUser,
+  getBooks,
+  follow,
+  getFollowingPosts,
+};

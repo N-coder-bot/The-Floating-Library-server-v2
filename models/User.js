@@ -5,9 +5,13 @@ const { Schema, model } = mongoose;
 // Defining User Schema.
 const UserSchema = new Schema({
   username: { type: String, unique: true, required: true },
+  profilePicture: { type: String },
   password: { type: String, required: true },
-  author: [{ type: mongoose.ObjectId, ref: "Author" }],
+  author: [{ type: mongoose.ObjectId, ref: "Author" }], // remove author later.
   books: [{ type: mongoose.ObjectId, ref: "Book" }],
+  posts: [{ type: mongoose.ObjectId, ref: "Post" }],
+  followers: [{ type: mongoose.ObjectId, ref: "User" }],
+  following: [{ type: mongoose.ObjectId, ref: "User" }],
 });
 
 // Hashing the password with a salt value of 10 before saving.
