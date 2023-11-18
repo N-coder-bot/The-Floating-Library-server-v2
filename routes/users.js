@@ -10,6 +10,7 @@ const {
   getFollowingPosts,
   follow,
   getAllUsers,
+  addProfilePhoto,
 } = require("../controllers/userController");
 const {
   createPost,
@@ -40,6 +41,8 @@ router.post("/user/post", auth, createPost);
 router.get("/user/getSignature", auth, getSignature);
 // add post to the database.
 router.post("/user/createPost", auth, createPost);
+// add a profile picture.
+router.post("/user/addProfilePhoto", auth, addProfilePhoto);
 // fetches all the posts of a user.
 router.get("/user/getPost", auth, getPost);
 // follow a person.

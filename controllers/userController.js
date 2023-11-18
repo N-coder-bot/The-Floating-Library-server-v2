@@ -186,6 +186,21 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 };
+
+// add profile photo.
+const addProfilePhoto = async (req, res) => {
+  const { image } = req.body;
+  try {
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { profilePicture: image },
+      { new: true }
+    );
+    res.status(200).json({ success: "success" });
+  } catch (error) {
+    res.status(500).json({ success: "failure" });
+  }
+};
 module.exports = {
   userLogin,
   userSignup,
@@ -195,4 +210,5 @@ module.exports = {
   follow,
   getFollowingPosts,
   getAllUsers,
+  addProfilePhoto,
 };
